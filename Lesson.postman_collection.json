@@ -1,0 +1,496 @@
+{
+	"info": {
+		"_postman_id": "e73a0cda-123e-4aed-addf-5cb048630520",
+		"name": "Lesson",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21265087"
+	},
+	"item": [
+		{
+			"name": "Auth_урок",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"access_token\", jsonData.access_token);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body contains access_token\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"access_token\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/auth/access_token",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"auth",
+						"access_token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clientlist_урок",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body contains contractor data\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"contentType\", \"id\", \"name\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"hasMoreNext=true\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.meta.pagination.hasMoreNext).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractor",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateclientCompany_урок",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"contractor_id\", jsonData.data.id);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Contractor is a Company\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.contentType).to.eql (\"ContractorCompany\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check contractor attributes\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.name).to.eql(\"ОАО МММ1\");\r",
+							"    pm.expect(jsonData.data.preferTransport).to.eql(\"informer\");\r",
+							"    pm.expect(jsonData.data.advertisingWay.name).to.eql(\"Сарафанное радио\");\r",
+							"    pm.expect(jsonData.data.activityType.name).to.eql(\"Продажа электротоваров\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"contentType\": \"ContractorCompany\",\r\n    \"Category183CustomFieldKolichestvoKontaktov\": null,\r\n    \"Category183CustomFieldKommentarii\": null,\r\n    \"Category183CustomFieldKlientskoePole\": \"1\",\r\n    \"Category183CustomFieldDaNet\": true,\r\n    \"Category183CustomFieldDataIVremya\": null,\r\n    \"Category183CustomFieldBolshoeChislo\": null,\r\n    \"Category183CustomFieldKlient\": null,\r\n    \"Category183CustomFieldTipChislo\": null,\r\n    \"Category183CustomFieldTipTekst\": null,\r\n    \"Category183CustomFieldDostavkaAdresDostavki\": null,\r\n    \"Category183CustomFieldDostavkaTelefonKlienta\": null,\r\n    \"Category183CustomFieldDostavkaFioPoluchatelya\": null,\r\n    \"Category183CustomFieldVazhnost\": null,\r\n    \"activityType\": {\r\n        \"id\": \"1000000\",\r\n        \"contentType\": \"ContractorActivityType\"\r\n    },\r\n    \"preferTransport\": \"informer\",\r\n    \"advertisingWay\": {\r\n        \"id\": \"8\",\r\n        \"contentType\": \"ContractorAdvertisingWay\"\r\n    },\r\n    \"status\": {\r\n        \"id\": \"1000000\",\r\n        \"contentType\": \"ContractorStatus\"\r\n    },\r\n    \"partners\": null,\r\n    \"competitors\": null,\r\n    \"birthday\": null,\r\n    \"responsibles\": [\r\n        {\r\n            \"id\": \"1000104\",\r\n            \"contentType\": \"Employee\"\r\n        }\r\n    ],\r\n    \"isPublic\": false,\r\n    \"description\": \"\",\r\n    \"type\": {\r\n        \"id\": \"1\",\r\n        \"contentType\": \"ContractorType\"\r\n    },\r\n    \"name\": \"ОАО МММ1\",\r\n    \"attaches\": [],\r\n    \"contactInfo\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractorCompany",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractorCompany"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateclientHuman_урок",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"contentType\": \"ContractorHuman\",\r\n    \"Category183CustomFieldKolichestvoKontaktov\": null,\r\n    \"Category183CustomFieldKommentarii\": null,\r\n    \"Category183CustomFieldKlientskoePole\": \"1\",\r\n    \"Category183CustomFieldDaNet\": true,\r\n    \"Category183CustomFieldDataIVremya\": null,\r\n    \"Category183CustomFieldBolshoeChislo\": null,\r\n    \"Category183CustomFieldKlient\": null,\r\n    \"Category183CustomFieldTipChislo\": null,\r\n    \"Category183CustomFieldTipTekst\": null,\r\n    \"Category183CustomFieldDostavkaAdresDostavki\": null,\r\n    \"Category183CustomFieldDostavkaTelefonKlienta\": null,\r\n    \"Category183CustomFieldDostavkaFioPoluchatelya\": null,\r\n    \"Category183CustomFieldVazhnost\": null,\r\n    \"activityType\": null,\r\n    \"advertisingWay\": null,\r\n    \"status\": null,\r\n    \"partners\": null,\r\n    \"competitors\": null,\r\n    \"birthday\": null,\r\n    \"responsibles\": [\r\n        {\r\n            \"id\": \"1000104\",\r\n            \"contentType\": \"Employee\"\r\n        }\r\n    ],\r\n    \"isPublic\": false,\r\n    \"gender\": \"male\",\r\n    \"description\": \"\",\r\n    \"type\": {\r\n        \"id\": \"1\",\r\n        \"contentType\": \"ContractorType\"\r\n    },\r\n    \"company\": null,\r\n    \"position\": \"\",\r\n    \"lastName\": \"Директор\",\r\n    \"firstName\": \"МММ\",\r\n    \"middleName\": \"\",\r\n    \"attaches\": [],\r\n    \"contactInfo\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractorHuman",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractorHuman"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Openclient_урок",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractor/{{contractor_id}}",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractor",
+						"{{contractor_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editclient_урок",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"contentType\": \"ContractorCompany\",\r\n    \"type\": {\r\n        \"id\": \"3\",\r\n        \"contentType\": \"ContractorType\"\r\n    },\r\n    \"activityType\": {\r\n        \"id\": \"1000001\",\r\n        \"contentType\": \"ContractorActivityType\"\r\n    },\r\n    \"status\": {\r\n        \"id\": \"1000001\",\r\n        \"contentType\": \"ContractorStatus\"\r\n    },\r\n    \"preferTransport\": \"sms\",\r\n   \"Category183CustomFieldKlientskoePole\": \"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractorCompany/{{contractor_id}}",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractorCompany",
+						"{{contractor_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleteclient_урок",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1272829\",\r\n    \"contentType\": \"ContractorCompany\",\r\n    \"isDropped\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractorCompany/{{contractor_id}}",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractorCompany",
+						"{{contractor_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AllDeleteclient_урок",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body({\r",
+							"    \"meta\": {\r",
+							"        \"status\": 200,\r",
+							"        \"errors\": []\r",
+							"    },\r",
+							"    \"data\": \"Contractor successfully removed\"\r",
+							"});\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractorCompany/{{contractor_id}}",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractorCompany",
+						"{{contractor_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Opendeletedclient_урок",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var contractor_id = pm.collectionVariables.get(\"contractor_id\");\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Not Found ContractorHuman with id = \" + contractor_id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://radio-shop.megaplan.by/api/v3/contractor/{{contractor_id}}",
+					"protocol": "https",
+					"host": [
+						"radio-shop",
+						"megaplan",
+						"by"
+					],
+					"path": [
+						"api",
+						"v3",
+						"contractor",
+						"{{contractor_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "NDAyZjgyNzM1YWYzNTI5NTViNGVlOTNlOTJmNWMzNjE2M2RmZDA3ZDcxYzJlOWRlZTk1M2Q3OTZlMTFiMjc3ZQ",
+			"type": "string"
+		},
+		{
+			"key": "contractor_id",
+			"value": "1272832",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "Exploratory1@1.1",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "Exploratory1@1.1",
+			"type": "string"
+		}
+	]
+}
